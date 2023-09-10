@@ -6,6 +6,8 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 
+using Dgmjr.PowerShell.Enums;
+
 namespace Dgmjr.PowerShell;
 
 [Cmdlet("Invoke", "Dotnet", DefaultParameterSetName = "Build")]
@@ -17,69 +19,69 @@ public class InvokeDotnet : PSCmdlet
 
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, Mandatory = true, Position = 1, ParameterSetName = "Build", HelpMessage = "The path to the project file to build. Defaults to the first .*proj file in the current directory.")]
     [ValidatePattern("^(?:(?:.*\\.*proj)|(?:.*\\.*props)|(?:.*\\.*targets)|(?:.*\\.*usings)|(?:.*\\.*tasks)|(?:.*\\.*items))$")]
-    [Alias(new string[] { "proj", "project", "path", "projpath" })]
+    [Alias(new[] { "proj", "project", "path", "projpath" })]
 
     public virtual string? ProjectPath { get; set; } = "./*.*proj";
 
 
     [Parameter(ValueFromPipeline = true, Position = 0, ValueFromPipelineByPropertyName = true, Mandatory = false, HelpMessage = "The command to run. Defaults to 'build'.", ParameterSetName = "Build")]
-    [ValidateSet(new string[] { "build", "test", "pack", "publish", "clean", "restore", "run", "help" })]
-    [Alias(new string[] { "cmd", "command" })]
+    [ValidateSet(new[] { "build", "test", "pack", "publish", "clean", "restore", "run", "help" })]
+    [Alias(new[] { "cmd", "command" })]
 
-    public virtual DotnetCommand Command { get; set; } = DotnetCommand.build.Instance;
+    public virtual DotnetCommand Command { get; set; } = DotnetCommand.build;
 
 
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, HelpMessage = "True if you want to push the build package to the Local feed; false otherwise. Defaults to true.", ParameterSetName = "Push")]
-    [Alias(new string[] { "pl", "pshloc", "pushlocl", "pushloc", "plocal" })]
+    [Alias(new[] { "pl", "pshloc", "pushlocl", "pushloc", "plocal" })]
 
     public SwitchParameter PushLocal { get; set; } = true;
 
 
     /// <summary>True if you want to push the build package to the GitHub NuGet feed; false otherwise. Defaults to false.</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, HelpMessage = "True if you want to push the build package to the GitHub NuGet feed; false otherwise. Defaults to false.", ParameterSetName = "Push")]
-    [Alias(new string[] { "pgh", "pshgh", "pushgh" })]
+    [Alias(new[] { "pgh", "pshgh", "pushgh" })]
 
     public SwitchParameter PushGitHub { get; set; } = false;
 
 
     /// <summary>True if you want to push the build package to the Azure Artifacts NuGet feed; false otherwise. Defaults to false.</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = "Push")]
-    [Alias(new string[] { "paz", "pshaz", "pushaz" })]
+    [Alias(new[] { "paz", "pshaz", "pushaz" })]
 
     public SwitchParameter PushAzure { get; set; } = false;
 
 
     /// <summary>True if you want to push the build package to the NuGet.org feed; false otherwise. Defaults to false.</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = "Push")]
-    [Alias(new string[] { "pn", "png", "pnu", "pushng" })]
+    [Alias(new[] { "pn", "png", "pnu", "pushng" })]
 
     public SwitchParameter PushNuGet { get; set; } = false;
 
 
     /// <summary>True if you want to push the build package to the NuGet.org feed; false otherwise. Defaults to false.</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = "Push")]
-    [Alias(new string[] { "nl", "no-logo" })]
+    [Alias(new[] { "nl", "no-logo" })]
 
     public SwitchParameter NoLogo { get; set; } = false;
 
 
     /// <summary>True if you want to restore the build package; false otherwise. Defaults to false.</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, HelpMessage = "True if you want to restore the build package; false otherwise. Defaults to false.", ParameterSetName = "Build")]
-    [Alias(new string[] { "no-restore" })]
+    [Alias(new[] { "no-restore" })]
 
     public SwitchParameter NoRestore { get; set; } = false;
 
 
     /// <summary>True if you want to restore the build package; false otherwise. Defaults to false.</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, HelpMessage = "Allows the command to stop and wait for user input or action (for example to complete authentication).", ParameterSetName = "Build")]
-    [Alias(new string[] { "inter" })]
+    [Alias(new[] { "inter" })]
 
     public SwitchParameter Interactive { get; set; } = false;
 
 
     /// <summary>The configuration to build with. Defaults to "Local"</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, HelpMessage = "The configuration to build with. Defaults to \"Local.\"", ParameterSetName = "Build")]
-    [Alias(new string[] { "c", "config" })]
+    [Alias(new[] { "c", "config" })]
 
     public string Configuration { get; set; } = "Local";
 
@@ -87,23 +89,23 @@ public class InvokeDotnet : PSCmdlet
     /// <summary>The verbosity of the build. Defaults to "minimal"</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
     [Parameter(Mandatory = false, HelpMessage = "The verbosity of the build. Defaults to \"minimal.\"", ParameterSetName = "Build")]
-    [ValidateSet(new string[] { "q", "quiet", "m", "minimal", "n", "normal", "d", "detailed", "diag", "diagnostic" })]
+    [ValidateSet(new[] { "q", "quiet", "m", "minimal", "n", "normal", "d", "detailed", "diag", "diagnostic" })]
 
-    public Verbosity Verbosity { get; set; } = Verbosity.Minimal.Instance;
+    public Verbosity Verbosity { get; set; } = Verbosity.Minimal;
 
 
     /// <summary>The targets to build. Defaults to "Build"</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
     [Parameter(Mandatory = false, HelpMessage = "The targets to build. Defaults to \"Build.\"", ParameterSetName = "Build")]
-    [Alias(new string[] { "t" })]
+    [Alias(new[] { "t" })]
 
-    public string[] Target { get; set; } = new string[1] { "Build" };
+    public string[] Target { get; set; } = new[] { "Build" };
 
 
     /// <summary>The version of the built package. Defaults to "0.0.1-Local"</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
     [Parameter(Mandatory = false, HelpMessage = "The version of the built package. Defaults to \"0.0.1-Local\"", ParameterSetName = "Build")]
-    [Alias(new string[] { "v" })]
+    [Alias(new[] { "v" })]
 
     public string? Version { get; set; } = null;
 
@@ -111,38 +113,38 @@ public class InvokeDotnet : PSCmdlet
     /// <summary>The version of the built assembly file. Defaults to "0.0.1"</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
     [Parameter(Mandatory = false, HelpMessage = "The version of the built assembly file. Defaults to \"0.0.1\".", ParameterSetName = "Build")]
-    [Alias(new string[] { "av", "asmv" })]
+    [Alias(new[] { "av", "asmv" })]
 
     public string? AssemblyVersion { get; set; } = null;
 
 
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-    [Alias(new string[] { "targets", "show-targets", "ts" })]
+    [Alias(new[] { "targets", "show-targets", "ts" })]
     [Parameter(Mandatory = false, HelpMessage = "Prints a list of available targets without executing the actual build process. By default, the output is written to the console window. If the path to an output file is provided that will be used instead.", ParameterSetName = "Build")]
     public StringSwitch PrintTargets { get; set; } = default;
 
 
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-    [Alias(new string[] { "prop", "properties" })]
+    [Alias(new[] { "prop", "properties" })]
     [Parameter(Mandatory = false, HelpMessage = "Set or override these project-level properties. <n> is the property name, and <v> is the property value. Use a semicolon or a comma to separate multiple properties, or specify each property separately.", ParameterSetName = "Build")]
     public string[] Property { get; set; } = Array.Empty<string>();
 
 
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
     [Parameter(Mandatory = false, HelpMessage = "The command to run. Defaults to 'build'.", ParameterSetName = "Build")]
-    [Alias(new string[] { "bl", "binlog" })]
+    [Alias(new[] { "bl", "binlog" })]
     public StringSwitch BinaryLogger { get; set; } = false;
 
 
     /// <summary>Prints the help text</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-    [Alias(new string[] { "?", "h" })]
+    [Alias(new[] { "?", "h" })]
     public SwitchParameter Help { get; set; } = false;
 
 
     /// <summary>Adds tags to the build</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = "Build")]
-    [Alias(new string[] { "tag" })]
+    [Alias(new[] { "tag" })]
     public string[] Tags { get; set; } = new string[1] { "Build" };
 
 

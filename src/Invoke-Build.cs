@@ -4,26 +4,27 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Management.Automation;
+using Dgmjr.PowerShell.Enums;
 
 namespace Dgmjr.PowerShell;
 
 [Cmdlet("Invoke", "Build", DefaultParameterSetName = "WithoutCommand")]
-[Alias(new string[] { "ib", "build", "invokebuild" })]
+[Alias(new[] { "ib", "build", "invokebuild" })]
 public class InvokeBuild : InvokeDotnet
 {
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, Mandatory = true, Position = 0, HelpMessage = "The path to the project file to build. Defaults to the first .*proj file in the current directory.")]
     [ValidatePattern("^(?:(?:.*\\.*proj)|(?:.*\\.*props)|(?:.*\\.*targets)|(?:.*\\.*usings)|(?:.*\\.*tasks)|(?:.*\\.*items))$")]
-    [Alias(new string[] { "proj", "project", "path", "projpath" })]
+    [Alias(new[] { "proj", "project", "path", "projpath" })]
     public override string? ProjectPath { get; set; } = "./*.*proj";
 
     /// <summary>True if you do NOT want to clean the output directory before building. False otherwise.</summary>
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, HelpMessage = "True if you do NOT want to clean the output directory before building. False otherwise.")]
-    [Alias(new string[] { "no-clean", "nc" })]
+    [Alias(new[] { "no-clean", "nc" })]
     public bool NoClean { get; set; } = false;
 
     public override DotnetCommand Command
     {
-        get => DotnetCommand.build.Instance;
+        get => DotnetCommand.build;
         set { }
     }
 

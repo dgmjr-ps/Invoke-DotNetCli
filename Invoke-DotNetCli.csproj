@@ -12,15 +12,15 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <OutputPath>$(MSBuildThisFileDirectory)/dist/</OutputPath>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputPath>$(MSBuildThisFileDirectory)/Invoke-DotNetCli/</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>Invole-DotNetCli</ToolCommandName>
+    <ToolCommandName>Invoke-DotNetCli</ToolCommandName>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerShell.SDK" />

@@ -2,11 +2,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Management.Automation;
 using Microsoft.Build.Evaluation;
+using Dgmjr.PowerShell.Enums;
 
 namespace Dgmjr.PowerShell;
 
 [Cmdlet("Invoke", "Clean", DefaultParameterSetName = "WithoutCommand")]
-[Alias(new string[] { "clean", "cln", "limpiar", "invokeclean" })]
+[Alias(new[] { "clean", "cln", "limpiar", "invokeclean" })]
 public class InvokeClean : InvokeDotnet
 {
     private const string IntermediateOutputPath = "IntermediateOutputPath";
@@ -15,14 +16,14 @@ public class InvokeClean : InvokeDotnet
 
     [Parameter(ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, Mandatory = true, Position = 0, HelpMessage = "The path to the project file to build. Defaults to the first .*proj file in the current directory.")]
     [ValidatePattern("^(?:(?:.*\\.*proj)|(?:.*\\.*props)|(?:.*\\.*targets)|(?:.*\\.*usings)|(?:.*\\.*tasks)|(?:.*\\.*items))$")]
-    [Alias(new string[] { "proj", "project", "path", "projpath" })]
+    [Alias(new[] { "proj", "project", "path", "projpath" })]
 
     public override string? ProjectPath { get; set; } = "./*.*proj";
 
 
     public override DotnetCommand Command
     {
-        get => DotnetCommand.clean.Instance;
+        get => DotnetCommand.clean;
         set { }
     }
 

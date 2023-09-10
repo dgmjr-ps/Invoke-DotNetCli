@@ -1,4 +1,5 @@
 using System.Management.Automation;
+using Dgmjr.PowerShell.Enums;
 
 namespace Dgmjr.PowerShell;
 
@@ -8,7 +9,7 @@ public class Publish : InvokeBuild
 {
     public override DotnetCommand Command
     {
-        get => DotnetCommand.publish.Instance;
+        get => DotnetCommand.publish;
         set { }
     }
 }
